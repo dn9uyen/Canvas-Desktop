@@ -22,15 +22,20 @@ app.on('ready', () => {
     //new Notification("testing", { body: "test" });
 });
 
+`
 ipcMain.on('asynchronous-message', (event, arg) => {
   console.log(arg) // prints "ping"
   event.reply('asynchronous-reply', 'pong')
 })
 
-ipcMain.on('synchronous-message', (event, arg) => {
+
+ipcMain.on('synchronous-message', (event, arg) => { 
   console.log(arg) // prints "ping"
   event.returnValue = 'pong'
 })
+`
+
+
 
 https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=<ACCESS-TOKEN>', (resp) => {
   let data = '';
@@ -49,10 +54,6 @@ https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=<ACCESS
   console.log("Error: " + err.message);
 });
 
-
-
-
-CourseRequest()
 // Quit when all windows are closed
 app.on('window-all-closed', () => {
     app.quit()
