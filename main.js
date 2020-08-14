@@ -1,4 +1,6 @@
 const { app, BrowserWindow, Notification } = require('electron')
+const https = require('https');
+const http = require('http')
 
 function createWindow () {
 // Create the browser window.
@@ -19,6 +21,26 @@ app.on('ready', () => {
     createWindow()
 
     //new Notification("testing", { body: "test" });
+});
+
+
+
+
+https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=<ACCESS-TOKEN>', (resp) => {
+  let data = '';
+
+  // Chunk Receive
+  resp.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  // JSON Parser
+  resp.on('end', () => {
+    console.log(JSON.parse(data).explanation);
+  });
+
+}).on("error", (err) => {
+  console.log("Error: " + err.message);
 });
 
 
