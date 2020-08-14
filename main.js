@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Notification } = require('electron')
 const https = require('https');
-const http = require('http')
 
 function createWindow () {
 // Create the browser window.
