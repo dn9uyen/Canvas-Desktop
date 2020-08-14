@@ -49,7 +49,10 @@ https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=<ACCESS
   console.log("Error: " + err.message);
 });
 
+}
 
+
+CourseRequest()
 // Quit when all windows are closed
 app.on('window-all-closed', () => {
     app.quit()
