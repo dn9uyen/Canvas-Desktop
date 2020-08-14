@@ -9,7 +9,9 @@ function createWindow () {
     })
 // Load html
     win.loadFile('index.html')
-
+// Disable menu bar at top
+    win.setMenu(null)
+// dev tools for testing
     win.webContents.openDevTools()
 }
 // Create window after initialization
