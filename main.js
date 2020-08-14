@@ -33,28 +33,49 @@ ipcMain.on('synchronous-message', (event, arg) => {
   console.log(arg) // prints "ping"
   event.returnValue = 'pong'
 })
+
 `
 
+let token = 0
+
+ipcMain.on('courses', (event, token1) => { 
+  token = token1
+  requestCanvas(token1, courses)
+  event.returnValue = true
+})
+
+function requestCanvas(token, resource){
+  console.log(token)
 
 
-https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=<ACCESS-TOKEN>', (resp) => {
-  let data = '';
-
-  // Chunk Receive
-  resp.on('data', (chunk) => {
-    data += chunk;
+  var getReq = https.request('https://dublinusd.instructure.com/api/v1/courses?access_token='.concat(token), function(res) {
+    console.log("\nstatus code: ", res.statusCode);
+    res.on('data', function(data) {
+        console.log( JSON.parse(data) );
+    });
+  });
+  
+  //end the request
+  getReq.end();
+  getReq.on('error', function(err){
+    console.log("Error: ", err);
   });
 
-  // JSON Parser
-  resp.on('end', () => {
-    console.log(JSON.parse(data).explanation);
-  });
 
-}).on("error", (err) => {
-  console.log("Error: " + err.message);
-});
 
-// Quit when all windows are closed
+
+  `https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=', token, (resp) => {
+    let data = '';
+
+    // Chunk Receive
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });`
+  
+}
+
+
+
 app.on('window-all-closed', () => {
-    app.quit()
+  app.quit()
 })
