@@ -22,38 +22,6 @@ app.on('ready', () => {
     //new Notification("testing", { body: "test" });
 });
 
-<<<<<<< Updated upstream
-`
-ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log(arg) // prints "ping"
-  event.reply('asynchronous-reply', 'pong')
-})
-
-
-ipcMain.on('synchronous-message', (event, arg) => { 
-  console.log(arg) // prints "ping"
-  event.returnValue = 'pong'
-})
-
-`
-
-let token = 0
-
-ipcMain.on('courses', (event, token1) => { 
-  token = token1
-  requestCanvas(token1, courses)
-  event.returnValue = true
-})
-
-function requestCanvas(token, resource){
-  console.log(token)
-
-
-  var getReq = https.request('https://dublinusd.instructure.com/api/v1/courses?access_token='.concat(token), function(res) {
-    console.log("\nstatus code: ", res.statusCode);
-    res.on('data', function(data) {
-        console.log( JSON.parse(data) );
-=======
 // TODO: add to settings file
 global.token = "";
 global.loggedIn = false;
@@ -87,37 +55,9 @@ function requestCanvas(resource, callback) {
             console.log("Error "+response.statusCode);
         }
             
->>>>>>> Stashed changes
     });
-  });
-  
-  //end the request
-  getReq.end();
-  getReq.on('error', function(err){
-    console.log("Error: ", err);
-  });
+  };
 
-
-
-
-  `https.get('https://dublinusd.instructure.com/api/v1/courses?access_token=', token, (resp) => {
-    let data = '';
-
-    // Chunk Receive
-    resp.on('data', (chunk) => {
-      data += chunk;
-    });`
-  
-}
-
-<<<<<<< Updated upstream
-
-
-app.on('window-all-closed', () => {
-  app.quit()
-})
-=======
 app.on("window-all-closed", () => {
     app.quit();
 });
->>>>>>> Stashed changes
