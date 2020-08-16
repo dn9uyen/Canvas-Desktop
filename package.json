@@ -19,5 +19,6 @@
   "homepage": "https://github.com/tnt84268/improvedCanvas#readme",
   "devDependencies": {
     "electron": "^9.2.0"
-  }
+  },
+  "dependencies": {}
 }
