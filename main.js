@@ -1,25 +1,27 @@
 const { app, BrowserWindow, Notification, ipcMain } = require('electron')
 const https = require('https');
 
-function createWindow () {
+var win = BrowserWindow;
+
+function createWindow() {
 // Create the browser window.
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
         height: 600,
-        webPreferences: {nodeIntegration: true}
+        webPreferences: {nodeIntegration: true}//, contextIsolation: true}
     })
-// Load html
-    win.loadFile('index.html')
-// Disable menu bar at top
-    win.setMenu(null)
-// dev tools for testing
-    win.webContents.openDevTools()
+    win.loadURL("file://" + __dirname + "/index.html")
+    win.removeMenu();
+    win.webContents.openDevTools() // dev tool, remove later
 }
 // Create window after initialization
 app.on('ready', () => {
     createWindow()
+});
 
-    //new Notification("testing", { body: "test" });
+ipcMain.on("openNewPage", (event, page) => {
+    // page string is "file://" + __dirname + resource
+    win.loadURL(page);
 });
 
 // TODO: add to settings file
@@ -31,7 +33,7 @@ ipcMain.on("jsonData", (event, arg) => {
     // check if logged in because function is also called during login
     if (!global.loggedIn) {global.token=arg[1]; global.loggedIn=true;}
     requestCanvas(arg[0], function(json) {
-        event.reply("jsonData", json);
+        event.reply("jsonData", json, arg[1]);
     });
     
 });
@@ -52,7 +54,7 @@ function requestCanvas(resource, callback) {
                 callback(JSON.parse(data));
             });
         } else {
-            console.log("Error "+response.statusCode);
+            console.log("Error:"+response.statusCode);
         }
             
     });

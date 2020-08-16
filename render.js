@@ -3,7 +3,14 @@ const { ipcRenderer } = require("electron");
 global.loggedIn = false;
 
 function requestData(resource, token) {
+    // request json data from requestCanvas()
     ipcRenderer.send("jsonData", [resource, token]);
+    console.log("test")
+}
+
+function openNewPage(page) {
+    // open new page in main.js
+    ipcRenderer.send("openNewPage", page);
 }
 
 // Login listener
@@ -19,8 +26,9 @@ document.getElementById("submit").addEventListener("mousedown", _listener);
 //document.getElementById("idHere").addEventListener("click", function(){ functionName(args);});
 
 // Handle response
-ipcRenderer.on("jsonData", (event, jsonData) => {
-    console.log(jsonData);
+ipcRenderer.on("jsonData", (event, arg) => {
+    // arg[0] is json data, arg[1] is resource name
+    openNewPage("file://" + __dirname + arg[1]);
     if (!global.loggedIn) {global.loggedIn = true; document.getElementById("submit").removeEventListener("mousedown", _listener);}
     // handle ui events here
 });
