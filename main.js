@@ -36,11 +36,12 @@ ipcMain.on("synchronous-message", (event, arg) => {
 `;
 
 global.token = 0;
+global.data = "";
 
 ipcMain.on("courses", (event, token) => { 
     global.token = token;
     requestCanvas("courses");
-    event.returnValue = true;
+    event.returnValue = global.data();
 });
 
 function requestCanvas(resource){
@@ -51,6 +52,7 @@ function requestCanvas(resource){
     let getRequest = https.request(base + resource + header, function(response) {
         console.log("\nstatus code: ", response.statusCode);    // for testing, remove later
         response.on("data", function(data) {
+            global.data = JSON.parse(data);
             //console.log(JSON.parse(data));    // for testing, remove later
         });
     });
