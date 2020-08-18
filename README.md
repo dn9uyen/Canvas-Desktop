@@ -1,3 +1,3 @@
 # improvedCanvas
 
-An improved desktop version of the Canvas LMS. Most of the changes are ui changes so it is easier to use and navigate.
+An improved version of the Canvas LMS for desktop. Most of the changes are ui changes so it is easier to use and navigate.
