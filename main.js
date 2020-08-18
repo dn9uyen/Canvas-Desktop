@@ -20,14 +20,14 @@ app.on('ready', () => {
 });
 
 ipcMain.on("openNewPage", (event, page) => {
-    win.loadURL("file://" + __dirname + page);
+    win.loadURL("file://" + __dirname + page + ".html");
 });
 
 // TODO: add to settings file
 global.token = "";
 global.loggedIn = false;
 
-// Request courses json
+// Request json data
 ipcMain.on("jsonData", (event, args) => {
     // args[0] is resource name, arg[1] is token
     requestCanvas(args[0], function(json) {
