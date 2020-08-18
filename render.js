@@ -26,9 +26,9 @@ document.getElementById("submit").addEventListener("mousedown", _listener);
 //document.getElementById("idHere").addEventListener("click", function(){ functionName(args);});
 
 // Handle response
-ipcRenderer.on("jsonData", (event, arg) => {
-    // arg[0] is json data, arg[1] is resource name
-    openNewPage("file://" + __dirname + arg[1]);
+ipcRenderer.on("jsonData", (event, args) => {
+    // args[0] is json data, args[1] is resource name
+    openNewPage(args[1]);
     if (!global.loggedIn) {global.loggedIn = true; document.getElementById("submit").removeEventListener("mousedown", _listener);}
     // handle ui events here
 });

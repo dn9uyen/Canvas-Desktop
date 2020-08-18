@@ -20,8 +20,7 @@ app.on('ready', () => {
 });
 
 ipcMain.on("openNewPage", (event, page) => {
-    // page string is "file://" + __dirname + resource
-    win.loadURL(page);
+    win.loadURL("file://" + __dirname + page);
 });
 
 // TODO: add to settings file
@@ -29,11 +28,12 @@ global.token = "";
 global.loggedIn = false;
 
 // Request courses json
-ipcMain.on("jsonData", (event, arg) => {
-    // check if logged in because function is also called during login
-    if (!global.loggedIn) {global.token=arg[1]; global.loggedIn=true;}
-    requestCanvas(arg[0], function(json) {
-        event.reply("jsonData", json, arg[1]);
+ipcMain.on("jsonData", (event, args) => {
+    // args[0] is resource name, arg[1] is token
+    requestCanvas(args[0], function(json) {
+        if (!global.loggedIn) {global.token=args[1];}
+        // return resource string
+        event.reply("jsonData", json, args[1]);
     });
     
 });
@@ -55,6 +55,7 @@ function requestCanvas(resource, callback) {
             });
         } else {
             console.log("Error:"+response.statusCode);
+            global.loggedIn=false;
         }
             
     });
