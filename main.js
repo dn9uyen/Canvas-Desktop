@@ -1,7 +1,9 @@
-const { app, BrowserWindow, Notification, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const https = require('https');
 
 var win = BrowserWindow;
+// TODO: add to settings file
+global.loggedIn = false;
 
 function createWindow() {
 // Create the browser window.
@@ -18,50 +20,26 @@ function createWindow() {
 app.on('ready', () => {
     createWindow()
 });
-
-ipcMain.on("openNewPage", (event, page) => {
-    win.loadURL("file://" + __dirname + "/" + page + ".html");
+app.on("window-all-closed", () => {
+    app.quit();
 });
 
-// TODO: add to settings file
-global.loggedIn = false;
-
-// Request json data
-ipcMain.on("jsonData", (event, resourceAndToken) => {
-    // args[0] is resource name, arg[1] is token
-    requestCanvas(resourceAndToken, function(json) {
-        // return resource string
-        event.reply("jsonData", json, resourceAndToken[0]);
-    });
-    
-});
-
-function requestCanvas(resourceAndToken, callback) {
+function requestCanvas(resource, token, callback) {
     // request canvas with the api location
-    console.log(global.token);
-    console.log(resourceAndToken[0]);
-    console.log(resourceAndToken[1]);
-    const url = "https://dublinusd.instructure.com/api/v1/"+resourceAndToken[0]+"?access_token="+resourceAndToken[1];
-    https.get(url, (response) => {
-        if (response.statusCode==200) {
-            console.log("valid request");
-            var data = "";
-            // data comes in stream
-            response.on("data", chunk => {
-                data += chunk;
-            });
-            response.on("end", () => {
-                // callback after request is finished
-                callback(JSON.parse(data));
-            });
-        } else {
-            console.log("Error:"+response.statusCode);
-            global.loggedIn=false;
-        }
-            
+    https.get("https://dublinusd.instructure.com/api/v1/"+resource+"?access_token="+token, (response) => {
+        if (response.statusCode===200) {
+            // save data chunks
+            let data = "";
+            response.on("data", chunk => {data += chunk;});
+            response.on("end", () => {callback(JSON.parse(data));});
+        } else {console.log("Error:"+response.statusCode);}
     });
   };
 
-app.on("window-all-closed", () => {
-    app.quit();
+// Request json data
+ipcMain.on("jsonData", (event, resource, token) => {
+    requestCanvas(resource, token, function(json) {
+        event.reply("jsonData", json, resource);
+    });
+    
 });
