@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const https = require('https');
-// const { stat } = require('fs');
+const path = require('path');
+const url = require('url');
 
 var win = BrowserWindow;
 // TODO: add to settings file
@@ -12,7 +13,12 @@ function createWindow() {
         height: 600,
         webPreferences: {nodeIntegration: true}//, contextIsolation: true}
     })
-    win.loadURL("file://" + __dirname + "/index.html")
+    const startUrl = process.env.ELECTRON_START_URL || url.format({
+        pathname: path.join(__dirname, '/../build/index.html'),
+        protocol: 'file:',
+        slashes: true
+    });
+    win.loadURL(startUrl);
     win.removeMenu();
     win.webContents.openDevTools({mode: "detach"});
 }
