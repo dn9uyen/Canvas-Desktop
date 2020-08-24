@@ -14,7 +14,7 @@ function createWindow() {
     })
     win.loadURL("file://" + __dirname + "/index.html")
     win.removeMenu();
-    win.webContents.openDevTools() // dev tool, remove later
+    win.webContents.openDevTools({mode: "detach"});
 }
 app.on('ready', () => {
     createWindow()
