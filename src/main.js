@@ -31,19 +31,21 @@ app.on("window-all-closed", () => {
 
 function checkTokenValidity(statusCode) {
     if (statusCode===200 && global.tokenSaved===false) {
+        return true;
         // saveToken()
         // global.tokenSaved = true
     } else if (statusCode===401 && global.tokenSaved){
+        return false;
         // saved token is invalid, delete it, throw incorrect token msg
     } else if (statusCode===401 && !global.tokenSaved) {
+        return false;
         // token invalid and not saved, throw incorrect token msg
     }
 }
 
 function requestCanvas(resource, token, callback) {
     https.get("https://dublinusd.instructure.com/api/v1/"+resource+"?access_token="+token, (response) => {
-        checkTokenValidity(response.statusCode);
-        if (response.statusCode===200) {
+        if (checkTokenValidity(response.statusCode)) {
             let data = "";
             response.on("data", chunk => {data += chunk;});
             response.on("end", () => {callback(JSON.parse(data));});
